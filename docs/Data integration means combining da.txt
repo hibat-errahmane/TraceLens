@@ -1,0 +1,161 @@
+Data integration means combining data from multiple sources into one unified dataset.
+EDA Exploratory Data analysis: examining and exploting a dataset to understand what is inside it before doing deeper analysis
+The measures of central tendency are Mean. Median, Mode 
+The mean: the average
+The median: is the middle value after sorting values
+The mode: the value that appears most often 
+Skewness: whether a distribustion is symmetric or pulled toward one side
+Right-skewed → long tail to the right ➡️
+Left-skewed → long tail to the left ⬅️
+Symmetric → balanced on both sides ⚖️
+In a right-skewed distribution:
+Mean > Median usually.
+Why? The large values in the long right tail pull the mean toward the right.
+Variance tells us how spread out the data is around the mean 
+Small variance -> values are close togther
+Large variance -> values are spread out 
+Standard deviation is closely related to the variance 
+Small SD → values are close to the mean
+Large SD → values are far from the mean
+Covariance tells us how two variables change together.
+
+Positive covariance -> when X increases, Y tends to increase
+Negative covariance -> When X increases, Y tends to decrease
+Near zero -> little/no linear relationship
+
+Correlation measures both the direction and the strength id the linear relationship 
+
++1 → perfect positive relationship
+0 → no linear relationship
+−1 → perfect negative relationship
+If correlation = +0.95, that's a very strong positive relationship.
+It lets us compare relationships more easily because correlation is standardized between -1 and +1.
+
+| Correlation | Meaning |
+|---|---|
+| `+1` | Perfect positive |
+| `+0.8` | Strong positive |
+| `0` | No linear relationship |
+| `−0.8` | Strong negative |
+| `−1` | Perfect negative |
+
+
+Data visualization : we use graphs/chatrs to understand data visually
+
+Bar chart → compare categories
+Histogram → distribution of numerical data
+Box plot → spread + outliers
+Scatter plot → relationship between two numerical variables
+
+Cosine similarity: instead of asking How far apart are these two objects cosine similarity asks how similar is their direction
+this is very useful when comparing documents/text represented as vectors
+
+Suppose:
+- Document A → [1, 2, 3]
+- Document B → [2, 4, 6]
+B is basically A multiplied by 2.
+They point in the same direction → cosine similarity is: 1
+
+Cosine similarity is usually between -1 and 1
+for non negative data such as word frequencies it is typically 0 to 1
+Noise = unwanted random variation or error in the data.
+
+The solutions to handle noise is : 
+Binning : Group nearby data values into bins (groups) and then smooth the values inside each bin 
+we can smooth using : Mean, Median,Defined boundaries
+Example
+Suppose we have sorted data:
+4, 5, 6, 7, 8, 9, 10, 11
+We could create bins of 4 values:
+- Bin 1 → 4, 5, 6, 7
+- Bin 2 → 8, 9, 10, 11
+Now we can replace the values in each bin with the mean.
+For Bin 1:
+Mean = (4+5+6+7)/4=5.5
+
+So the bin becomes approximately: => 5.5, 5.5, 5.5, 5.5 => This smooths small fluctuations.
+Why? => Instead of letting every small variation influence our analysis, we replace values with a representative value.
+Clustering : We group similar data points into clusters
+Points that don't fit well into any cluster can be considered possible noise/outliers
+An outlier is not automatically noise.
+Why?
+Clustering helps us discover the structure of the data, and points that don't belong to any meaningful group can be investigated.
+Imputation techniques: 
+Imputation = estimating a missing/problematic value using available information.
+A. Average
+B. Nearest Neighbor : The most similar/nearest observations and use their information to estimate the missing value
+C.heuristic: practical rule used to make a reasonable estimate. It's not necessarily mathematically perfect; it's a reasonable rule based on knowledge of the problem 
+D.Interpolation: This is especially useful when data has an ordered relationship, such as time 
+| Time | Temperature |
+|---|---:|
+| 10:00 | 20°C |
+| 11:00 | ? |
+| 12:00 | 24°C |
+
+Semi-supervised Method: Computer detects suspicious points => Human examines them => Human decides what to do 
+because algorithms aren't always able to understand the context
+
+
+
+Introducing some variation/noise during training can sometimes:
+- reduce overfitting
+- improve generalization
+- make the model more adaptable to real-world variations
+
+Data Transformation: converting data into a format that is suitable for analysis 
+we need it because : 
+raw data isn't in a form that algorithms can use effectively
+we have some techniques like: 
+Sampling = selecting a subset of a dataset to represent a larger population/dataset.
+Sampling Methods: 
+Simple Random Sampling: every item has an equal chance of being selected it can be with or without replacement
+Systematic Sampling: We select people/items at regular intervals  Systematic = every k-th item.
+Stratified Sampling: Dividing the population into groups called strata based on characteristic then take a random sample from each group 
+Cluster Sampling: We divide the population into groups but instead of selecting individuals from every group, we randomly select entire groups ( clusters)
+Encoding: converting categorical variables into numerical representations.
+methods: 
+Label Encoding: Label encoding is NOT suitable for nominal attributes. because maybe it will be an order
+One hot Encoding: Instead of giving categories numbers like 0,1,2, we create a separate binary column for each category.If we have thousands of categories, one-hot encoding creates thousands of columns.(disadvantage)
+Normalization: When we're dealing with numerical attributes. Scaling numerical data so attributes contribute more equally to the analysis
+Why is this important?
+Suppose we calculate distance using:
+Age = 25
+and
+Salary = 60,000
+The salary difference can completely dominate the distance simply because its numerical scale is much larger. => Normalization helps prevent that.
+Normalization Methods:
+Min-Max Normalization: It transforms values into a specifies range, commonly [0, 1]
+	Adv: Exact same chosen scale
+ 	Useful when we specifically want [0,1]
+	disadv: Sensitive to outliers
+	
+Z-Score Normalization: standardization.
+Discretization: When we have continuous numerical data 
+means converting continuous values into a small number of discrete intervals/categories (bins)
+
+It can make data:
+- easier to analyze
+- easier to interpret
+- more manageable for some algorithms
+Types of Discretization:
+Unsupervised Discretization: Does not use the class/target label. It looks at the feature itself. We have 3 methods
+
+A. Equal Width: Divide the range into intervals of equal size
+
+B. Equal Frequency: Instead of making intervals the same width, we make each bin contain approximately the same number of observations 
+
+Equal Width → same interval size
+Equal Frequency → same number of data points
+C. K-means Discretization: We use K-means clustering to divide values into k groups
+The algorithm finds natural groupings in the data.Then each group becomes a bin/category...You must specify k, the number of groups
+
+Supervised Discretization uses the class/target label.
+Top-down / Splitting
+Start with all data in one bin.
+Then repeatedly split it into smaller bins to make the classes more separable
+
+Bottom-up / Merging
+The opposite direction.
+Start with each data point in its own bin.
+Then merge neighboring bins when doing so improves class purity.
+
