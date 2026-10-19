@@ -31,7 +31,7 @@ def find_test_files(project_path):
         if path.name.startswith("test_") or path.name.endswith("_test.py"):
             test_files.append(str(relative_path))
 
-            return test_files
+    return sorted(test_files)
 def detect_source_file(project_path, test_files):
     """Find a likely source file next to the first test file."""
 
