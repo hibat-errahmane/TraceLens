@@ -40,6 +40,16 @@ class TestDiscovery(unittest.TestCase):
 
             self.assertEqual(detect_test_framework(root), "pytest")
 
+
+    def test_detects_pytest_in_requirements(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            (root / "requirements.txt").write_text(
+                "pytest>=8.0\\n", encoding="utf-8"
+            )
+
+            self.assertEqual(detect_test_framework(root), "pytest")
+
     def test_returns_no_command_without_tests(self):
         with tempfile.TemporaryDirectory() as temp:
             self.assertIsNone(detect_test_command(temp))
