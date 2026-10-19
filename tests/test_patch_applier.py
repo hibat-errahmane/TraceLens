@@ -66,7 +66,26 @@ class TestPatchApplier(unittest.TestCase):
             self.assertFalse(result["success"])
             self.assertIn("changed since investigation", result["error"])
             self.assertEqual(source.read_text(encoding="utf-8"), "value = 3\n")
+    def test_refuses_to_modify_file_outside_project(self):
+        with tempfile.TemporaryDirectory() as temp:
+            project = Path(temp) / "project"
+            project.mkdir()
 
+            outside_file = Path(temp) / "outside.py"
+            outside_file.write_text("value = 1\n", encoding="utf-8")
+
+            with self.assertRaises(ValueError):
+                apply_patch_and_verify(
+                    project,
+                    "../outside.py",
+                    "value = 2\n",
+                    [sys.executable, "-c", "pass"],
+                )
+
+            self.assertEqual(
+                outside_file.read_text(encoding="utf-8"),
+                "value = 1\n",
+            )
 
 if __name__ == "__main__":
     unittest.main()
