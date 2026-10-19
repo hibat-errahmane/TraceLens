@@ -38,7 +38,13 @@ if result:
 
     st.subheader("🔎 Discovered Information")
     st.write("**Testing framework:**", discovery["framework"])
-    st.write("**Test files:**", discovery["test_files"])
+    st.markdown("**Test files:**")
+
+    test_files = discovery.get("test_files", [])
+    if test_files:
+        st.text("\n".join(str(file) for file in test_files))
+    else:
+        st.text("No test files found.")
     st.write("**Source file:**", discovery["source_file"])
 
     workflow = result.get("workflow")

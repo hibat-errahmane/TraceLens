@@ -54,15 +54,27 @@ def investigate_and_validate(
         flags=re.DOTALL,
     )
 
+    
     if candidates:
         patch = candidates[-1].strip() + "\n"
     else:
-        return {
-            "status": "patch_not_extracted",
-            "ai_diagnosis": diagnosis,
-            "patch": None,
-            "validation": None,
-        }
+        # Support a plain-text Python function returned by the AI.
+        match = re.search(
+            r"(?ms)^def\s+" + re.escape("calculate_total") +
+            r"\s*\(.*?(?=\n```|\nPATCH_UNAVAILABLE|\Z)",
+            diagnosis,
+        )
+
+        if match:
+            patch = match.group(0).strip() + "\n"
+        else:
+            return {
+                "status": "patch_not_extracted",
+                "ai_diagnosis": diagnosis,
+                "patch": None,
+                "validation": None,
+            }
+
 
     validation = validate_patch(
         project_path,
