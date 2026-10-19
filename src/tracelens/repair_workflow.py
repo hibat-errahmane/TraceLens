@@ -39,7 +39,6 @@ def investigate_and_validate(
 
     diagnosis = ai_result["diagnosis"]
 
-    
     if "PATCH_UNAVAILABLE" in diagnosis:
         return {
             "status": "patch_not_extracted",
@@ -48,33 +47,22 @@ def investigate_and_validate(
             "validation": None,
         }
 
-    # Extract code from a fenced block, regardless of its language label.
+    # Extract code from a fenced block, ignoring any explanation after it.
     candidates = re.findall(
-        r"```[^\n`]*\n(.*?)```",
+        r"```(?:[a-zA-Z0-9_+-]+)?[ \t]*\n(.*?)```",
         diagnosis,
         flags=re.DOTALL,
     )
 
-    if len(candidates) == 1:
-        patch = candidates[0].strip() + "\n"
+    if candidates:
+        patch = candidates[-1].strip() + "\n"
     else:
-        # Fallback: extract the known function from an unfenced response.
-        match = re.search(
-            r"(?m)^def calculate_total\(.*?(?=\n\s*\n|\Z)",
-            diagnosis,
-            flags=re.DOTALL,
-        )
-
-        if not match:
-            return {
-                "status": "patch_not_extracted",
-                "ai_diagnosis": diagnosis,
-                "patch": None,
-                "validation": None,
-            }
-
-        patch = match.group(0).strip() + "\n"
-
+        return {
+            "status": "patch_not_extracted",
+            "ai_diagnosis": diagnosis,
+            "patch": None,
+            "validation": None,
+        }
 
     validation = validate_patch(
         project_path,
